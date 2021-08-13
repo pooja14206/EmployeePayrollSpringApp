@@ -1,14 +1,13 @@
 package com.org.EmployeePayrollApp.model;
 
 import com.org.EmployeePayrollApp.dto.EmployeePayrollDTO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Data
 @Getter
 @Setter
+@ToString
+@AllArgsConstructor
 public class EmployeePayrollData {
 
     private int empId;
