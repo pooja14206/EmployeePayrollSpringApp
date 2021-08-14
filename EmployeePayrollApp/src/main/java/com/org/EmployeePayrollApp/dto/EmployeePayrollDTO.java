@@ -1,11 +1,7 @@
 package com.org.EmployeePayrollApp.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-
 import javax.validation.constraints.*;
-import java.time.LocalDate;
-import java.util.List;
 
 @ToString
 @Data

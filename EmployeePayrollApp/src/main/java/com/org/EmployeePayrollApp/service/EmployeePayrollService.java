@@ -1,6 +1,7 @@
 package com.org.EmployeePayrollApp.service;
 
 import com.org.EmployeePayrollApp.dto.EmployeePayrollDTO;
+import com.org.EmployeePayrollApp.exception.EmployeePayrollException;
 import com.org.EmployeePayrollApp.model.EmployeePayrollData;
 import com.org.EmployeePayrollApp.repository.IEmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class EmployeePayrollService implements IEmployeePayrollService{
 
     @Override
     public EmployeePayrollData getEmployeePayrollDataById(int empId) {
-        return employeeRepository.findById(empId).get();
+        return employeeRepository.findById(empId).orElseThrow(() -> new EmployeePayrollException("EmployeeId " + empId +" does not exists.Please write a correct empId"));
     }
 
     @Override
