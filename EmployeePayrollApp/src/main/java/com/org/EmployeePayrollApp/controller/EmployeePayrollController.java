@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,6 +21,7 @@ public class EmployeePayrollController {
     @Autowired
     IEmployeePayrollService employeePayrollService;
 
+
     //Adding slf4j.
     Logger logger = LoggerFactory.getLogger(EmployeePayrollController.class);
 
@@ -27,12 +29,11 @@ public class EmployeePayrollController {
      * Ability to Get All the employee form the list using GET Method.
      * Executing URL: localhost:8080/employeepayrollservice/get
      */
-
     @GetMapping("/get")
     public ResponseEntity<ResponseDTO> getEmployeePayrollData() {
         logger.trace("getEmployeePayrollData() method is running");
-        List<EmployeePayrollData> employeePayrollData = employeePayrollService.getEmployeePayrollData();
-        ResponseDTO respDTO = new ResponseDTO("Get Call Success", employeePayrollData);
+        List<EmployeePayrollData> employeeData = employeePayrollService.getEmployeePayrollData();
+        ResponseDTO respDTO = new ResponseDTO("Get Call Successful", employeeData);
         return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
     }
 
@@ -41,26 +42,25 @@ public class EmployeePayrollController {
      * Executing URL: localhost:8080/employeepayrollservice/get/1
      * @param: empId.
      */
-
     @GetMapping("/get/{empId}")
-    public ResponseEntity<ResponseDTO> getEmployeePayrollData(@PathVariable("empId") int empId) {
-        logger.trace("getEmployeePayrollDataById() method is running");
-        EmployeePayrollData employeePayrollData = employeePayrollService.getEmployeePayrollDataById(empId);
-        ResponseDTO responseDTO = new ResponseDTO("Get employee by Id Successfully", employeePayrollData);
-        return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.OK);
-    }
+        public ResponseEntity<ResponseDTO> getEmployeePayrollDataById(@PathVariable("empId") int empId) {
+            logger.trace("getEmployeePayrollDataById() method is running");
+            EmployeePayrollData employeeData = employeePayrollService.getEmployeePayrollDataById(empId);
+            ResponseDTO respDTO = new ResponseDTO("Get Call For ID Successful", employeeData);
+            return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
+        }
 
     /*
      * Ability to insert new employee to the list using POST Method.
      * Executing URL: localhost:8080/employeepayrollservice/create
      */
-
     @PostMapping("/create")
-    public ResponseEntity<ResponseDTO> addEmployeePayrollData(@RequestBody EmployeePayrollDTO employeePayrollDTO) {
+    public ResponseEntity<ResponseDTO> addEmployeePayrollData(@Valid @RequestBody EmployeePayrollDTO employeePayrollDTO) {
         logger.trace("addEmployeePayrollData() method is running");
-        EmployeePayrollData employeePayrollData = employeePayrollService.createEmployeePayrollData(employeePayrollDTO);
-        ResponseDTO responseDTO = new ResponseDTO("Create new employee Successfully", employeePayrollData);
-        return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.OK);
+        EmployeePayrollData employeeData = employeePayrollService.addEmployeePayrollData(employeePayrollDTO);
+        ResponseDTO respDTO = new ResponseDTO("Created Employee Payroll Data Successfully", employeeData);
+        return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
+
     }
 
     /*
@@ -68,24 +68,23 @@ public class EmployeePayrollController {
      * Executing URL: localhost:8080/employeepayrollservice/update/2
      * @param: empId.
      */
-
     @PutMapping("/update/{empId}")
-    public ResponseEntity<ResponseDTO> updateEmployeePayrollData(@RequestBody EmployeePayrollDTO employeePayrollDTO, @PathVariable int empId) {
+    public ResponseEntity<ResponseDTO> updateEmployeePayrollData(@PathVariable("empId") int empId, @Valid @RequestBody EmployeePayrollDTO employeePayrollDTO) {
         logger.trace("updateEmployeePayrollData() method is running");
-        EmployeePayrollData employeePayrollData = employeePayrollService.updateEmployeePayrollData(empId, employeePayrollDTO);
-        ResponseDTO responseDTO = new ResponseDTO("Update Employee Successfully", employeePayrollData);
-        return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.OK);
-    }
+            EmployeePayrollData empData = employeePayrollService.updateEmployeePayrollData(empId, employeePayrollDTO);
+            ResponseDTO respDTO = new ResponseDTO("Updated Employee Payroll Data Successfully", empData);
+            return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
+        }
 
     /*
      * Ability to delete a employee from the list using DELETE Method.
      * Executing URL: localhost:8080/employeepayrollservice/delete/2
      * @param: empId.
      */
-
     @DeleteMapping("/delete/{empId}")
-    public ResponseEntity<String> deleteEmployeePayrollData(@PathVariable("empId") int empId) {
+    public ResponseEntity<ResponseDTO> deleteEmployeePayrollData(@PathVariable("empId") int empId) {
         logger.trace("deleteEmployeePayrollData() method is running");
-        return new ResponseEntity<String>("Delete Call Success for id: " + empId, HttpStatus.OK);
-    }
+        employeePayrollService.deleteEmployeePayrollData(empId);
+        ResponseDTO respDTO = new ResponseDTO("Deleted Successfully", "Deleted id: "+empId);
+        return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);    }
 }
